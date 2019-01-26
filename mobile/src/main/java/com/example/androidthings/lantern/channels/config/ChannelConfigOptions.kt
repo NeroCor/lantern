@@ -14,6 +14,7 @@ object ChannelConfigOptions {
             "message" to MessageConfigActivity::class.java,
             "calendar-clock" to CalendarConfigActivity::class.java,
             "webview" to WebConfigActivity::class.java,
+            "bahn-anzeige" to BahnAnzeigeConfigActivity::class.java,
             "ambient-weather" to WeatherConfigActivity::class.java,
             "now-playing" to NowPlayingConfigActivity::class.java,
             "space-porthole" to SpaceConfigActivity::class.java

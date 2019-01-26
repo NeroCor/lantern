@@ -92,6 +92,12 @@
             android:parentActivityName=".channels.ChannelsListActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".channels.config.BahnAnzeigeConfigActivity"
+            android:configChanges="orientation"
+            android:label="Customize"
+            android:parentActivityName=".channels.ChannelsListActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".channels.config.NowPlayingConfigActivity"
             android:configChanges="orientation"
             android:label="Customize"

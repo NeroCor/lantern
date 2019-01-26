@@ -23,6 +23,13 @@ object ChannelsRegistry {
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_clock"),
                     customizable = true
             )),
+            Pair(::BahnAnzeigeChannel, ChannelInfo(
+                    "bahn-anzeige",
+                    "Bahn Anzeige",
+                    "Shows the Departures of a DB Train Station",
+                    Uri.parse("android.resource://com.example.androidthings.lantern/drawable/bahn"),
+                    customizable = true
+            )),
             Pair(::ScreenShot, ChannelInfo(
                     "ScreenShot",
                     "Take a picture",
