@@ -1,4 +1,4 @@
-package com.example.androidthings.lantern;
+package com.example.androidthings.lantern.channels;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.androidthings.lantern.Channel;
 
 public class HuyChannel extends Channel {
 
@@ -21,7 +23,6 @@ public class HuyChannel extends Channel {
         text.setTextSize(30f);
         text.setGravity(Gravity.CENTER);
         return text;
-
     }
 
 }
