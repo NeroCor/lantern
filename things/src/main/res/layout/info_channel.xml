@@ -13,7 +13,7 @@
         app:layout_constraintDimensionRatio=""
         app:layout_constraintEnd_toStartOf="@+id/centerGuideline"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/lantern_splash_logo" />
+        app:srcCompat="@drawable/divablack" />
 
     <android.support.constraint.Guideline
         android:id="@+id/centerGuideline"
