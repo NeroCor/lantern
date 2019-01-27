@@ -31,7 +31,7 @@ class ConfigurationServer(val context: Context) {
                 AdvertisingOptions(Strategy.P2P_CLUSTER))
                 .addOnSuccessListener { Log.d(TAG, "Began advertising") }
                 .addOnFailureListener { e ->
-                    Log.e(TAG, "Failed to start advertising. Retrying in two seconds.", e)
+                    //Log.e(TAG, "Failed to start advertising. Retrying in two seconds.", e)
                     retryAdvertisingHandler.postDelayed({ startAdvertising(name) }, 2000)
                 }
     }

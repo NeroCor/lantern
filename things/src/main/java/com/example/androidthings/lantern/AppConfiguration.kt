@@ -51,9 +51,9 @@ class AppConfiguration(private val context: Context): Observable() {
                         }
                     },
                     "forward": {
-                        "type": "calendar-clock",
+                        "type": "bahn-anzeige",
                         "secrets": {
-                            "url": "https://calendar.google.com/calendar/ical/nordprojects.co_gjfo1dqt495ll9dt7vmoicjfu4%40group.calendar.google.com/public/basic.ics"
+                            "bhfid": "mh"
                         }
                     },
                     "down": {

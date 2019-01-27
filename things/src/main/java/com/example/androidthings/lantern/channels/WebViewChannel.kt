@@ -14,7 +14,8 @@ import com.example.androidthings.lantern.Channel
 import com.example.androidthings.lantern.R
 import kotlinx.android.synthetic.*
 import android.graphics.BitmapFactory
-
+import android.util.Log
+import android.webkit.PermissionRequest
 
 
 /**
@@ -27,10 +28,13 @@ import android.graphics.BitmapFactory
  * Created by dingxu on 2/5/18.
  */
 class WebViewChannel: Channel() {
+    private val TAG: String = WebViewChannel::class.java.simpleName
     private var webView: WebView? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
+
         if (webView == null) {
             webView = ATWebView(activity!!)
             loadURL(config.settings.optString("url"))
@@ -49,9 +53,19 @@ class WebViewChannel: Channel() {
 
     private inner class ATWebView constructor(context: Context) : WebView(context) {
         init {
-            webChromeClient = WebChromeClient()
+            Log.d(TAG, "ATWebView init")
+
+            webChromeClient = object : WebChromeClient() {
+                // Grant permissions for cam
+                override fun onPermissionRequest(request: PermissionRequest) {
+                    Log.d(TAG, "On Permission Request "+ request.toString())
+                    request.grant(request.resources)
+                }
+
+            }
 
             webViewClient = object : WebViewClient() {
+
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
 
@@ -62,6 +76,10 @@ class WebViewChannel: Channel() {
                 }
             }
 
+            settings.allowFileAccessFromFileURLs = true
+            settings.allowFileAccess = true
+            settings.allowUniversalAccessFromFileURLs = true
+            settings.allowContentAccess = true
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
             settings.useWideViewPort = true

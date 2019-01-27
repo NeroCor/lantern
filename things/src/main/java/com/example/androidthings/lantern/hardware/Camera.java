@@ -72,6 +72,8 @@ public class Camera {
     public void initializeCamera(Context context,
                                  Handler backgroundHandler,
                                  ImageReader.OnImageAvailableListener imageAvailableListener) {
+        Log.d(TAG, "Camara Init");
+
         // Discover the camera instance
         CameraManager manager = (CameraManager) context.getSystemService(CAMERA_SERVICE);
         String[] camIds = {};
