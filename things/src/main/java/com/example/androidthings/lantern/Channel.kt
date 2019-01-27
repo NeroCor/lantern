@@ -2,6 +2,7 @@ package com.example.androidthings.lantern
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.View
 import com.example.androidthings.lantern.shared.ChannelConfiguration
 import com.example.androidthings.lantern.shared.Rotation
@@ -11,6 +12,8 @@ import com.example.androidthings.lantern.shared.Rotation
  * add content.
  */
 open class Channel : Fragment() {
+    val TAG = this::class.java.simpleName
+
     val config: ChannelConfiguration by lazy {
         arguments!!.getParcelable<ChannelConfiguration>(ARG_CONFIG)
     }
@@ -23,6 +26,15 @@ open class Channel : Fragment() {
         const val ARG_CONFIG = "config"
         const val ARG_ROTATION_DISABLED = "rotationDisabled"
     }
+
+    open fun onChannelShow(){
+        Log.d(TAG, "Show Channel")
+    }
+
+    open fun onChannelHide(){
+        Log.d(TAG, "Hide Channel")
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

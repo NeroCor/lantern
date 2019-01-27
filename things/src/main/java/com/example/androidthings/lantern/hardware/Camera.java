@@ -184,7 +184,6 @@ public class Camera {
                     mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureBuilder.addTarget(mImageReader.getSurface());
             captureBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON);
-            Log.d(TAG, "Session initialized.");
             mCaptureSession.capture(captureBuilder.build(), mCaptureCallback, null);
         } catch (CameraAccessException cae) {
             Log.e(TAG, "camera capture exception", cae);
@@ -211,7 +210,6 @@ public class Camera {
                     if (session != null) {
                         session.close();
                         mCaptureSession = null;
-                        Log.d(TAG, "CaptureSession closed");
                     }
                 }
             };

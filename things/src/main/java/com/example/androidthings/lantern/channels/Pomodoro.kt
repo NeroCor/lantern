@@ -16,6 +16,11 @@ import android.widget.ImageView
 import com.example.androidthings.lantern.Channel
 import com.example.androidthings.lantern.hardware.Camera
 import kotlin.math.absoluteValue
+import android.R.attr.bitmap
+import android.opengl.ETC1.getWidth
+import android.opengl.ETC1.getHeight
+
+
 
 
 /**
@@ -23,16 +28,38 @@ import kotlin.math.absoluteValue
  */
 class Pomodoro : Channel() {
 
-    val TAG = this::class.java.simpleName
-
     private lateinit var view: ImageView
 
     private val handler: Handler = Handler()
+    private val historySize = 300
+    private val historyValidCount = 10
+    private val pixelSpacing = 5
+    private val differenceHighValue = 4
+    private val differenceLowValue = 2
+    private val topBrigthnessHistory = mutableListOf<Int>()
+    private val bottomBrigthnessHistory = mutableListOf<Int>()
 
     private var mCamera: Camera = Camera.getInstance()
 
+    private var isOpen = false
+
+
+
+    override fun onChannelShow() {
+        super.onChannelShow()
+        isOpen = true
+        handler.post({mCamera.takePicture()})
+
+    }
+
+    override fun onChannelHide() {
+        super.onChannelHide()
+        isOpen = false
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        isOpen = true
         this.view = ImageView(context)
         this.view.scaleType = ImageView.ScaleType.CENTER_INSIDE
 
@@ -42,44 +69,90 @@ class Pomodoro : Channel() {
 
         mCamera.initializeCamera(this.activity, mCameraHandler, imageAvailableListener)
 
-        handler.postDelayed({ mCamera.takePicture() }, 3000)
+        handler.post({ mCamera.takePicture() })
         return view
     }
 
     private val imageAvailableListener = ImageReader.OnImageAvailableListener { reader ->
-        Log.d(TAG, "ImageAvailable!")
         val image = reader.acquireLatestImage()
         val imageBuffer = image.planes[0].buffer
         val imageBytes = ByteArray(imageBuffer.remaining())
         imageBuffer.get(imageBytes)
         image.close()
         val bitmap = getBitmapFromByteArray(imageBytes)
-        //calculateLuminanceDifference(bitmap)
+        calculateLuminanceDifference(bitmap)
         handler.post({ this.view.setImageBitmap(bitmap) })
-        handler.post({mCamera.takePicture()})
+        if (isOpen)
+            handler.post({mCamera.takePicture()})
     }
 
-    private fun calculateLuminanceDifference(bitmap: Bitmap): Float {
+    private fun calculateLuminanceDifference(bitmap: Bitmap): Int {
         val height = bitmap.height
         val width = bitmap.width
-        val pixelCount = height*width
-        var upperValue = 0.0f
-        var lowerValue = 0.0f
+        var r = 0
+        var g = 0
+        var b = 0
+        var n = 0
+        var topBrightnessHistoryAvr = 0
+        var bottomBrightnessHistoryAvr = 0
+        var brightnessTop = 0
+        var brightnessBottom = 0
+        val pixels = IntArray(width * height)
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+        var i = 0
+        while (i < pixels.size/2) {
+            val color = pixels[i]
+            r += Color.red(color)
+            g += Color.green(color)
+            b += Color.blue(color)
+            n++
+            i += pixelSpacing
+        }
+        brightnessTop = (r + b + g) / (n * 3)
+        i = pixels.size/2
+        r = 0
+        g = 0
+        b = 0
+        n = 0
+        while (i < pixels.size) {
+            val color = pixels[i]
+            r += Color.red(color)
+            g += Color.green(color)
+            b += Color.blue(color)
+            n++
+            i += pixelSpacing
+        }
+        brightnessBottom = (r + b + g) / (n * 3)
 
-        for(x in 0..(width-1)){
-            for(y in 0..(height/2)){
-                upperValue += (Color.valueOf(bitmap.getPixel(x,y)).luminance())/(pixelCount/2)
-            }
-            for(y in ((height/2)+1)..(height-1)){
-                lowerValue += (Color.valueOf(bitmap.getPixel(x,y)).luminance())/(pixelCount/2)
+        if(bottomBrigthnessHistory.size > historyValidCount && topBrigthnessHistory.size > historyValidCount){
+            topBrightnessHistoryAvr = bottomBrigthnessHistory.sum()/bottomBrigthnessHistory.size
+            bottomBrightnessHistoryAvr = bottomBrigthnessHistory.sum()/bottomBrigthnessHistory.size
+
+            val isTopSame = (topBrightnessHistoryAvr - brightnessTop).absoluteValue <= differenceLowValue
+            val isBottomDifferent = (bottomBrightnessHistoryAvr - brightnessBottom).absoluteValue >= differenceHighValue
+
+            Log.d(TAG, "Top: "+brightnessTop+"\t avr: "+topBrightnessHistoryAvr)
+            Log.d(TAG, "Bot: "+brightnessBottom+"\t avr: "+bottomBrightnessHistoryAvr)
+
+            if (isTopSame && isBottomDifferent) {
+                Log.d(TAG, "Down - Button")
+            } else {
+                Log.d(TAG, "Up - Button")
             }
         }
 
-        Log.d(TAG, ("Upper"+upperValue))
-        Log.d(TAG, ("Lower"+lowerValue))
-        Log.d(TAG, ("difference"+(upperValue - lowerValue).absoluteValue))
+        topBrigthnessHistory.add(brightnessTop)
+        if (topBrigthnessHistory.size > historySize){
+            topBrigthnessHistory.remove(1)
+        }
 
-        return (upperValue - lowerValue).absoluteValue
+        bottomBrigthnessHistory.add(brightnessBottom)
+        if (bottomBrigthnessHistory.size > historySize){
+            bottomBrigthnessHistory.remove(1)
+        }
+
+        Log.d(TAG, "Difference:"+((brightnessBottom-brightnessTop).absoluteValue))
+        return (brightnessBottom-brightnessTop).absoluteValue
     }
 
     private fun getBitmapFromByteArray(imageBytes: ByteArray): Bitmap {

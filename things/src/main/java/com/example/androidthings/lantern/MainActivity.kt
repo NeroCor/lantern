@@ -93,10 +93,12 @@ class MainActivity : AppCompatActivity() {
 
         if (oldVisibleChannel != null) {
             transaction.hide(oldVisibleChannel)
+            oldVisibleChannel.onChannelHide()
         }
         if (newVisibleChannel != null) {
             if (supportFragmentManager.fragments.contains(newVisibleChannel)) {
                 transaction.show(newVisibleChannel)
+                newVisibleChannel.onChannelShow()
             } else {
                 transaction.add(R.id.viewGroup, newVisibleChannel)
             }

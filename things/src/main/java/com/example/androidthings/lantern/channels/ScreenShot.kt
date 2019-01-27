@@ -21,8 +21,6 @@ import com.example.androidthings.lantern.hardware.Camera
  */
 class ScreenShot : Channel() {
 
-    val TAG = this::class.java.simpleName
-
     private lateinit var view: ImageView
 
     private val handler: Handler = Handler()

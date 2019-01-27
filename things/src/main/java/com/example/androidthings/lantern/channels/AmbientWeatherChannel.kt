@@ -32,7 +32,6 @@ import kotlin.concurrent.fixedRateTimer
  *         The location to get the weather for. If missing, uses the Googleplex.
  */
 class AmbientWeatherChannel : Channel() {
-    val TAG = this::class.java.simpleName
     var weatherConditions: WeatherConditions? = null
     var videoUri: Uri? = null
 

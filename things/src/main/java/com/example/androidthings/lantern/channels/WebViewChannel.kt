@@ -28,7 +28,6 @@ import android.webkit.PermissionRequest
  * Created by dingxu on 2/5/18.
  */
 class WebViewChannel: Channel() {
-    private val TAG: String = WebViewChannel::class.java.simpleName
     private var webView: WebView? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

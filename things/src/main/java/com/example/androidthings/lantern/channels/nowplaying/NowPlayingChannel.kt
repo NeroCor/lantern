@@ -37,7 +37,6 @@ import kotlin.properties.Delegates
  *         first device it finds on the network.
  */
 class NowPlayingChannel : Channel() {
-    val TAG = this::class.java.simpleName
     private val configDeviceId by lazy { config.settings.opt("castId") as? String }
     private val configStyle by lazy {
         Style.withJsonName(config.settings.optString("style")) ?: Style.STACKED
