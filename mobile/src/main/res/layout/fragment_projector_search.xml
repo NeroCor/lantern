@@ -44,13 +44,10 @@
 
         <ImageView
             android:id="@+id/lampHead"
-            android:layout_width="0dp"
+            android:layout_width="102dp"
             android:layout_height="0dp"
             android:src="@drawable/search_projector_head"
-            app:layout_constraintBottom_toTopOf="@+id/guidelineLampHeadBase"
-            app:layout_constraintDimensionRatio="H,1:1"
-            app:layout_constraintEnd_toStartOf="@+id/guidelineLampHeadRight"
-            app:layout_constraintStart_toStartOf="@+id/guidelineLampHeadLeft" />
+            tools:layout_editor_absoluteX="25dp" />
 
         <!-- Lamp Head Guides -->
 

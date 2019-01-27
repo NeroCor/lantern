@@ -36,6 +36,12 @@ object ChannelsRegistry {
                     "Take a picture of something that is under lantern and project it to any surface.",
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_screenshot")
                     )),
+            Pair(::Pomodoro, ChannelInfo(
+                    "Pomodoro",
+                    "Runs a Pomodoro Timer",
+                    "Work with Pomodoro",
+                    Uri.parse("android.resource://com.example.androidthings.lantern/drawable/pomodoro")
+            )),
             Pair(::NowPlayingChannel, ChannelInfo(
                     "now-playing",
                     "Now playing",
