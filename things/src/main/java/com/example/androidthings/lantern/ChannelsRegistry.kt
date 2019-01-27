@@ -89,6 +89,11 @@ object ChannelsRegistry {
                     "Lantern Info",
                     "Projects some useful information about the projector",
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_info")
+            )),
+            Pair(::HuyChannel, ChannelInfo(
+                    "huy-channel",
+                    "Huys Channel",
+                    "The greatest Channel!"
             ))
     )
 
