@@ -44,23 +44,13 @@ class AppConfiguration(private val context: Context): Observable() {
             {
                 "planes": {
                     "up": {
-                        "type": "space-porthole",
-                        "settings": {
-                            "latitude": 51.5,
-                            "longitude": 0.0
-                        }
+                        "type": "red-light-channel"
                     },
                     "forward": {
-                        "type": "bahn-anzeige",
-                        "secrets": {
-                            "bhfid": "mh"
-                        }
+                        "type": "pomodoro"
                     },
                     "down": {
-                        "type": "ambient-weather",
-                        "settings": {
-                            "weatherOverride": "CALM"
-                        }
+                        "type": "bahn-anzeige"
                     }
                 }
             }

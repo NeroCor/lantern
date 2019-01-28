@@ -17,8 +17,18 @@ import com.example.androidthings.lantern.Channel
 import com.example.androidthings.lantern.hardware.Camera
 import kotlin.math.absoluteValue
 import android.R.attr.bitmap
+import android.content.Context
 import android.opengl.ETC1.getWidth
 import android.opengl.ETC1.getHeight
+import android.webkit.PermissionRequest
+import android.webkit.WebChromeClient
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import kotlinx.android.synthetic.*
+import android.R.attr.start
+import java.lang.reflect.Array.getLength
+import android.media.MediaPlayer
+import android.content.res.AssetFileDescriptor
 
 
 
@@ -28,13 +38,15 @@ import android.opengl.ETC1.getHeight
  */
 class Pomodoro : Channel() {
 
+    private var webView: WebView? = null
+
     private lateinit var view: ImageView
 
     private val handler: Handler = Handler()
-    private val historySize = 300
+    private val historySize = 50
     private val historyValidCount = 10
     private val pixelSpacing = 5
-    private val differenceHighValue = 4
+    private val differenceHighValue = 3
     private val differenceLowValue = 2
     private val topBrigthnessHistory = mutableListOf<Int>()
     private val bottomBrigthnessHistory = mutableListOf<Int>()
@@ -42,6 +54,8 @@ class Pomodoro : Channel() {
     private var mCamera: Camera = Camera.getInstance()
 
     private var isOpen = false
+
+    private var isButtonDown = false
 
 
 
@@ -70,7 +84,22 @@ class Pomodoro : Channel() {
         mCamera.initializeCamera(this.activity, mCameraHandler, imageAvailableListener)
 
         handler.post({ mCamera.takePicture() })
-        return view
+        //return view
+
+        if (webView == null) {
+            webView = ATWebView(activity!!)
+            loadURL("file:///android_asset/pomodoro.html")
+        }
+        return webView
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        this.clearFindViewByIdCache()
+    }
+
+    private fun loadURL(url: String) {
+        webView?.loadUrl(url)
     }
 
     private val imageAvailableListener = ImageReader.OnImageAvailableListener { reader ->
@@ -80,13 +109,13 @@ class Pomodoro : Channel() {
         imageBuffer.get(imageBytes)
         image.close()
         val bitmap = getBitmapFromByteArray(imageBytes)
-        calculateLuminanceDifference(bitmap)
+        checkIfButtonIsDown(bitmap)
         handler.post({ this.view.setImageBitmap(bitmap) })
         if (isOpen)
             handler.post({mCamera.takePicture()})
     }
 
-    private fun calculateLuminanceDifference(bitmap: Bitmap): Int {
+    private fun checkIfButtonIsDown(bitmap: Bitmap): Int {
         val height = bitmap.height
         val width = bitmap.width
         var r = 0
@@ -125,7 +154,7 @@ class Pomodoro : Channel() {
         brightnessBottom = (r + b + g) / (n * 3)
 
         if(bottomBrigthnessHistory.size > historyValidCount && topBrigthnessHistory.size > historyValidCount){
-            topBrightnessHistoryAvr = bottomBrigthnessHistory.sum()/bottomBrigthnessHistory.size
+            topBrightnessHistoryAvr = topBrigthnessHistory.sum()/topBrigthnessHistory.size
             bottomBrightnessHistoryAvr = bottomBrigthnessHistory.sum()/bottomBrigthnessHistory.size
 
             val isTopSame = (topBrightnessHistoryAvr - brightnessTop).absoluteValue <= differenceLowValue
@@ -135,8 +164,17 @@ class Pomodoro : Channel() {
             Log.d(TAG, "Bot: "+brightnessBottom+"\t avr: "+bottomBrightnessHistoryAvr)
 
             if (isTopSame && isBottomDifferent) {
+                if(!isButtonDown) {
+                    isButtonDown=true
+                    handler.post({ loadURL("javascript:buttonDown()") })
+
+                }
                 Log.d(TAG, "Down - Button")
             } else {
+                if(isButtonDown) {
+                    isButtonDown=false
+                    handler.post({ loadURL("javascript:buttonUp()") })
+                }
                 Log.d(TAG, "Up - Button")
             }
         }
@@ -151,12 +189,48 @@ class Pomodoro : Channel() {
             bottomBrigthnessHistory.remove(1)
         }
 
-        Log.d(TAG, "Difference:"+((brightnessBottom-brightnessTop).absoluteValue))
         return (brightnessBottom-brightnessTop).absoluteValue
     }
 
     private fun getBitmapFromByteArray(imageBytes: ByteArray): Bitmap {
         val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, Matrix(), true)
+    }
+
+    private inner class ATWebView constructor(context: Context) : WebView(context) {
+        init {
+            Log.d(TAG, "ATWebView init")
+
+            webChromeClient = object : WebChromeClient() {
+                // Grant permissions for cam
+                override fun onPermissionRequest(request: PermissionRequest) {
+                    Log.d(TAG, "On Permission Request "+ request.toString())
+                    request.grant(request.resources)
+                }
+
+            }
+
+            webViewClient = object : WebViewClient() {
+
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    super.onPageFinished(view, url)
+
+                    // scroll to specified location if specified
+                    if(config.settings.has("scrollTo")) {
+                        scrollTo(0, config.settings.getInt("scrollTo"));
+                    }
+                }
+            }
+
+            settings.allowFileAccessFromFileURLs = true
+            settings.allowFileAccess = true
+            settings.allowUniversalAccessFromFileURLs = true
+            settings.allowContentAccess = true
+            settings.javaScriptEnabled = true
+            settings.domStorageEnabled = true
+            settings.useWideViewPort = true
+            settings.loadWithOverviewMode = true
+            settings.builtInZoomControls = true
+        }
     }
 }

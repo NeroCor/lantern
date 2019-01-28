@@ -37,7 +37,7 @@ object ChannelsRegistry {
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_screenshot")
                     )),
             Pair(::Pomodoro, ChannelInfo(
-                    "Pomodoro",
+                    "pomodoro",
                     "Runs a Pomodoro Timer",
                     "Work with Pomodoro",
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/pomodoro")
