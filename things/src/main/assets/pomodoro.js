@@ -72,7 +72,7 @@ function buttonUp(){
 };
 
 var workStrings=[
-    "work! ...you pice of shit!",
+    "work! ...you piece of shit!",
     "lets hack!",
     "get shit done!",
     "Focus",
