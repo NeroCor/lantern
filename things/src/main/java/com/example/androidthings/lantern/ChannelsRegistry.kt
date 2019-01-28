@@ -30,6 +30,13 @@ object ChannelsRegistry {
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/bahn"),
                     customizable = true
             )),
+            Pair(::WeatherChannel, ChannelInfo(
+                    "weather-biergarten-anzeige",
+                    "Weather Screen",
+                    "Shows the actual weather and at some point an biergarden around with a nice background.",
+                    Uri.parse("android.resource://com.example.androidthings.lantern/drawable/mood_biergarten_low"),
+                    customizable = true
+            )),
             Pair(::ScreenShot, ChannelInfo(
                     "ScreenShot",
                     "Take a picture",
