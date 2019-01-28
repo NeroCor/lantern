@@ -1,12 +1,19 @@
 <html>
 <head>
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300" type="text/css" />
     <link rel="stylesheet" type="text/css" href="pomodoro.css">
 </head>
 <body>
 <div class="wrapper">
-    <div id="timer" class="timer">TikTak</div>
-    <div id="button" class="button"><div class="button-text">Hold to Start</div></div>
+    <div id="timer" class="timer">
+        <p id="time-text" class="time-text">Start Working</p>
+        <p id="caption" class="caption"></p>
+    </div>
+    <div id="button" class="button" onmousedown="buttonDown()" onmouseup="buttonUp()">
+        <div class="button-inner-background">
+            <p id="button-text" class="button-text">Hold to Start</p>
+        </div>
+    </div>
 
 </div>
 <script type="text/javascript" src="pomodoro.js"></script>

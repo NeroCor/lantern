@@ -44,9 +44,9 @@ class Pomodoro : Channel() {
 
     private val handler: Handler = Handler()
     private val historySize = 50
-    private val historyValidCount = 10
+    private val historyValidCount = 20
     private val pixelSpacing = 5
-    private val differenceHighValue = 3
+    private val differenceHighValue = 8
     private val differenceLowValue = 2
     private val topBrigthnessHistory = mutableListOf<Int>()
     private val bottomBrigthnessHistory = mutableListOf<Int>()
@@ -163,7 +163,7 @@ class Pomodoro : Channel() {
             Log.d(TAG, "Top: "+brightnessTop+"\t avr: "+topBrightnessHistoryAvr)
             Log.d(TAG, "Bot: "+brightnessBottom+"\t avr: "+bottomBrightnessHistoryAvr)
 
-            if (isTopSame && isBottomDifferent) {
+            if (isBottomDifferent) {
                 if(!isButtonDown) {
                     isButtonDown=true
                     handler.post({ loadURL("javascript:buttonDown()") })
