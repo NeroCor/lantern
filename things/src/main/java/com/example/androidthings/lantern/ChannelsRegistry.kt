@@ -2,6 +2,7 @@ package com.example.androidthings.lantern
 
 import android.net.Uri
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import com.example.androidthings.lantern.channels.*
 import com.example.androidthings.lantern.channels.nowplaying.NowPlayingChannel
 import com.example.androidthings.lantern.channels.spaceporthole.SpacePortholeChannel
@@ -15,7 +16,7 @@ import com.example.androidthings.lantern.shared.ChannelInfo
  * Created by joerick on 25/01/18.
  */
 object ChannelsRegistry {
-    val channelsWithInfo = arrayOf<Pair<() -> Channel, ChannelInfo>>(
+    val channelsWithInfo = arrayOf<Pair<() -> Fragment, ChannelInfo>>(
             Pair(::CalendarChannel, ChannelInfo(
                     "calendar-clock",
                     "Augmented clock",
@@ -23,7 +24,8 @@ object ChannelsRegistry {
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_clock"),
                     customizable = true
             )),
-            Pair(::BahnAnzeigeChannel, ChannelInfo(
+            // default
+            Pair(::LineRiderChannel, ChannelInfo(
                     "bahn-anzeige",
                     "Bahn Anzeige",
                     "Shows the Departures of a DB Train Station",
@@ -110,10 +112,10 @@ object ChannelsRegistry {
 
     val channelsInfo = channelsWithInfo.map { it.second }
 
-    fun newChannelForConfig(config: ChannelConfiguration): Channel {
+    fun newChannelForConfig(config: ChannelConfiguration): Fragment {
         val args = Bundle()
         args.putParcelable(Channel.ARG_CONFIG, config)
-        var channel: Channel? = null
+        var channel: Fragment? = null
         var rotationDisabled = false
 
         for ((channelConstructor, info) in ChannelsRegistry.channelsWithInfo) {

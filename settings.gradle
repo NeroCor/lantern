@@ -1,1 +1,1 @@
-include ':mobile', ':things', ':shared'
+include ':mobile', ':things', ':shared', ':core'

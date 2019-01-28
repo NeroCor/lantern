@@ -12,6 +12,7 @@ import com.example.androidthings.lantern.shared.Rotation
  * add content.
  */
 open class Channel : Fragment() {
+    
     val TAG = this::class.java.simpleName
 
     val config: ChannelConfiguration by lazy {
@@ -46,4 +47,5 @@ open class Channel : Fragment() {
             }
         }
     }
+
 }

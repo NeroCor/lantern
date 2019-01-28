@@ -1,10 +1,12 @@
 package com.example.androidthings.lantern
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import com.badlogic.gdx.backends.android.AndroidFragmentApplication
 import com.example.androidthings.lantern.channels.ErrorChannel
-import com.example.androidthings.lantern.shared.ChannelConfiguration
+import com.example.androidthings.lantern.channels.LineRiderChannel
 import com.example.androidthings.lantern.shared.Direction
 import java.util.*
 
@@ -12,13 +14,17 @@ import java.util.*
  * The main activity coordinates the display of channels, depending on the current orientation
  * and the config.
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
+
+    override fun exit() {
+    }
+
     private val TAG = MainActivity::class.java.simpleName
 
     private val accelerometerObserver = Observer { _, _ -> accelerometerUpdated() }
     private val appConfigObserver = Observer { _, _ -> appConfigUpdated() }
-    private val channels = mutableMapOf<Direction, Channel>()
-    private var visibleChannel: Channel? = null
+    private val channels = mutableMapOf<Direction, Fragment>()
+    private var visibleChannel: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,8 +71,13 @@ class MainActivity : AppCompatActivity() {
             val needsRefresh =
                     if (prevChannel == null) {
                         true
-                    } else {
+                    } else if (prevChannel is Channel) {
+                            (incomingChannelConfig != prevChannel.config)
+                    } else if (prevChannel is LineRiderChannel) {
                         (incomingChannelConfig != prevChannel.config)
+                    }
+                    else {
+                        false
                     }
 
             if (needsRefresh) {

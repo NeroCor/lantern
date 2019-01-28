@@ -16,10 +16,8 @@ public class HuyChannel extends Channel {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         TextView text = new TextView(getContext());
-
-        text.setText("Hello Team Lantern!");
+        text.setText("Huy: Hello Team Lantern!");
         text.setTextSize(30f);
         text.setGravity(Gravity.CENTER);
         return text;

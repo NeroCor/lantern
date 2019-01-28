@@ -8,21 +8,23 @@ import android.support.v7.app.AppCompatActivity
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
-import com.example.androidthings.lantern.channels.InfoChannel
+import android.view.WindowManager
+import com.badlogic.gdx.backends.android.AndroidFragmentApplication
 import com.example.androidthings.lantern.shared.ChannelConfiguration
 import com.google.android.things.device.DeviceManager
 import kotlinx.android.synthetic.main.launch_activity_layout.*
-import android.view.WindowManager
-
 
 
 /**
  * Created by joerick on 01/03/18.
  */
-class LaunchActivity: AppCompatActivity() {
+class LaunchActivity: AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.launch_activity_layout)
+    }
+
+    override fun exit() {
     }
 
     override fun onStart() {
