@@ -1,5 +1,6 @@
 package com.example.androidthings.lantern.channels
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -12,25 +13,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import com.example.androidthings.lantern.Channel
-import com.example.androidthings.lantern.hardware.Camera
-import kotlin.math.absoluteValue
-import android.R.attr.bitmap
-import android.content.Context
-import android.opengl.ETC1.getWidth
-import android.opengl.ETC1.getHeight
 import android.webkit.PermissionRequest
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.ImageView
+import com.example.androidthings.lantern.Channel
+import com.example.androidthings.lantern.hardware.Camera
 import kotlinx.android.synthetic.*
-import android.R.attr.start
-import java.lang.reflect.Array.getLength
-import android.media.MediaPlayer
-import android.content.res.AssetFileDescriptor
-
-
+import kotlin.math.absoluteValue
 
 
 /**

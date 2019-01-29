@@ -104,12 +104,16 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
 
         if (oldVisibleChannel != null) {
             transaction.hide(oldVisibleChannel)
-            oldVisibleChannel.onChannelHide()
+            if (oldVisibleChannel is Channel) {
+                oldVisibleChannel.onChannelHide()
+            }
         }
         if (newVisibleChannel != null) {
             if (supportFragmentManager.fragments.contains(newVisibleChannel)) {
                 transaction.show(newVisibleChannel)
-                newVisibleChannel.onChannelShow()
+                if (newVisibleChannel is Channel) {
+                    newVisibleChannel.onChannelShow()
+                }
             } else {
                 transaction.add(R.id.viewGroup, newVisibleChannel)
             }

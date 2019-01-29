@@ -7,17 +7,27 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class PointActor extends Actor {
 
+    private Fixture fixture;
     private ShapeRenderer sr;
+    private World world;
+    private boolean shouldFill = false;
 
-    public PointActor(World world, Color color, float posX, float posY, float radius) {
+    public PointActor(World world, Color color, float posX, float posY, float radius, boolean shouldFill) {
+        this.world = world;
+        this.shouldFill = shouldFill;
         setSize(radius, radius);
         setColor(color);
+
+        // TODO callibration
+        posX = posX - 160;
+        posY = posY + 40;
 
         sr = new ShapeRenderer();
         sr.setAutoShapeType(true);
@@ -42,7 +52,7 @@ public class PointActor extends Actor {
         fixtureDef.restitution = 0.6f; // Make it bounce a little bit
 
         // Create a fixture from our polygon shape and add it to our ground body
-        body.createFixture(fixtureDef);
+        fixture = body.createFixture(fixtureDef);
 
         // Clean up after ourselves
         circle.dispose();
@@ -50,15 +60,25 @@ public class PointActor extends Actor {
     }
 
     @Override
+    public boolean remove() {
+        world.destroyBody(fixture.getBody());
+        clear();
+        world = null;
+        return super.remove();
+    }
+
+    @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
         batch.end();
-
-        Vector2 pos = new Vector2(getX(), getY());
-        sr.begin(ShapeRenderer.ShapeType.Filled);
-        sr.setColor(Color.WHITE);
-        sr.circle(pos.x, pos.y, getHeight());
-        sr.end();
+        if (shouldFill) {
+            // TODO ui thread
+            Vector2 pos = new Vector2(getX(), getY());
+            sr.begin(ShapeRenderer.ShapeType.Filled);
+            sr.setColor(Color.WHITE);
+            sr.circle(pos.x, pos.y, getHeight());
+            sr.end();
+        }
 
 //        Vector2 coords = new Vector2(getX(), getY());
 //

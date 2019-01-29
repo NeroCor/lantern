@@ -15,6 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.divae.lantern.Bodies.PointActor;
 import com.divae.lantern.Bodies.Rider;
+import com.divae.lantern.util.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.badlogic.gdx.Gdx.graphics;
 
@@ -27,6 +31,9 @@ public class GameScreen implements Screen {
     private World world;
 
     private Box2DDebugRenderer debugRenderer;
+
+    private List<PointActor> points = new ArrayList<PointActor>();
+//    private List<Body> pointBodies = new ArrayList<Body>();
 
     public GameScreen(Game game) {
         this.game = game;
@@ -42,31 +49,44 @@ public class GameScreen implements Screen {
 
         world = new World(new Vector2(0, -1000), true);
 
-        Rider rider = new Rider(world, normalizeX(300), normalizeY(900), 100);
+        Rider rider = new Rider(world, normalizeX(300, true), normalizeY(900, false), 100, true, false);
         stage.addActor(rider);
 
         rider.addListener(onRiderTouched());
         rider.setTouchable(Touchable.enabled);
 
-        for (int i = 0; i < 300; i = i + 3) {
-            PointActor point = new PointActor(world, Color.WHITE, normalizeX(280 + i), normalizeY(700 - i), 3);
-            stage.addActor(point);
-            System.out.println("point added");
+//        final int length = 300;
+//        final int gap = 10;
+//
+//        Gdx.app.log("GameScreen","adding points...");
+//        for (int i = 0; i < length; i = i + gap) {
+//            PointActor point = new PointActor(world, Color.WHITE, normalizeX(280 + i), normalizeY(700 - i), 3, false);
+//            stage.addActor(point);
+//        }
+//        Gdx.app.log("GameScreen","adding points... finished");
+    }
+
+    // TODO get resolution from cam
+    private float normalizeX(float x, boolean invertAxis) {
+        if (invertAxis) {
+            return graphics.getHeight() - ((graphics.getWidth() / resolutionX) * x);
+        }
+        else {
+            return (graphics.getWidth() / resolutionX) * x;
         }
     }
 
-//    private final List<Body> pointBodies = new ArrayList<Body>();
-
-    // TODO get resolution from cam
-    private float normalizeX(float x) {
-        float resolutionX = 1000;
-        return (graphics.getWidth() / resolutionX) * x;
+    private float normalizeY(float y, boolean invertAxis) {
+        if (invertAxis) {
+            return graphics.getHeight() - ((graphics.getHeight() / resolutionY) * y);
+        }
+        else {
+            return (graphics.getHeight() / resolutionY) * y;
+        }
     }
 
-    private float normalizeY(float y) {
-        float resolutionY = 1000;
-        return (graphics.getHeight() / resolutionY) * y;
-    }
+    private float resolutionX = 1000;
+    private float resolutionY = 1000;
 
     @Override
     public void render(float delta) {
@@ -77,7 +97,7 @@ public class GameScreen implements Screen {
         stage.act();
 
         // if debug
-//        debugRenderer.render(world, stage.getCamera().combined);
+        debugRenderer.render(world, stage.getCamera().combined);
         world.step(graphics.getDeltaTime(), 6, 2);
     }
 
@@ -105,6 +125,37 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+    }
+
+    private int maxPoints = 20;
+
+    public void onExtracted(int width, int height, List<Pair<Integer, Integer>> coords) {
+        Gdx.app.log("GameScreen","on extracted: points size " + coords.size());
+        resolutionX = width;
+        resolutionY = height;
+        int pick = coords.size() / maxPoints;
+        Gdx.app.log("GameScreen","adding points...every " + pick);
+        clearPoints();
+
+        for (int i = 0; i < coords.size(); i++) {
+            if (pick > 0 && i % pick == 0) {
+                Pair<Integer, Integer> coord = coords.get(i);
+                PointActor point = new PointActor(world, Color.YELLOW, normalizeX(coord.getElement0(), false), normalizeY(coord.getElement1(), true), 3, false);
+                points.add(point);
+                stage.addActor(point);
+            }
+        }
+
+        Gdx.app.log("GameScreen","adding points... finished");
+    }
+
+    private void clearPoints() {
+        Gdx.app.log("GameScreen","clear points...");
+        for (PointActor point : points) {
+//                    point.addAction(Actions.removeActor());
+            point.remove();
+        }
+        points.clear();
     }
 
     private InputListener onRiderTouched() {

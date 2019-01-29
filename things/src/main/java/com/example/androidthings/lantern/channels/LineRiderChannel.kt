@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
 import com.badlogic.gdx.backends.android.AndroidFragmentApplication
 import com.divae.lantern.LineRider
+import com.example.androidthings.lantern.channels.edgedetector.EdgeDetector
 import com.example.androidthings.lantern.shared.ChannelConfiguration
 import com.example.androidthings.lantern.shared.Rotation
 
@@ -45,8 +46,10 @@ class LineRiderChannel : AndroidFragmentApplication() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val config = AndroidApplicationConfiguration()
-        return initializeForView(LineRider(), config)
+        val config    = AndroidApplicationConfiguration()
+        val lineRider = LineRider();
+        val detector  = EdgeDetector(context, lineRider)
+        return initializeForView(lineRider, config)
     }
 
 }

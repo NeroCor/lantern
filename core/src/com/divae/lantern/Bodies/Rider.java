@@ -23,25 +23,40 @@ public class Rider extends Image {
     private Body body;
     private World world;
 
-    public Rider(World world, float posX, float posY, float size) {
+    private boolean hasEffect = true;
+
+    private boolean autoRespawn = true;
+
+    private final float startX;
+    private float startY;
+
+    private final float size;
+
+    public Rider(World world, float startX, float startY, float size, boolean autoRespawn, boolean hasEffect) {
         super(new Texture("sleigh_white.png"));
+        this.startX = startX;
+        this.startY = startY;
+        this.size = size;
+        this.hasEffect = hasEffect;
         setSize(size, size);
 
         textureAtlas = new TextureAtlas();
         textureAtlas.addRegion("note",new TextureRegion(new Texture("note.png")));
 
-        this.setPosition(posX, posY);
+        this.setPosition(startX, startY);
 
         this.world = world;
-        effect = new ParticleEffect();
-        effect.load(Gdx.files.internal("bubleNote.p"), textureAtlas);
-        effect.start();
-        effect.setPosition(this.getWidth()/2+this.getX(),this.getHeight()/2+this.getY());
 
+        if (hasEffect) {
+            effect = new ParticleEffect();
+            effect.load(Gdx.files.internal("bubleNote.p"), textureAtlas);
+            effect.start();
+            effect.setPosition(this.getWidth()/2+this.getX(),this.getHeight()/2+this.getY());
+        }
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(posX, posY);
+        bodyDef.position.set(startX, startY);
 
         // Create a body in the world using our definition
         body = this.world.createBody(bodyDef);
@@ -71,7 +86,9 @@ public class Rider extends Image {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-        effect.draw(batch);
+        if (effect != null) {
+            effect.draw(batch);
+        }
     }
 
     @Override
@@ -80,8 +97,24 @@ public class Rider extends Image {
         this.setRotation(body.getAngle()*  MathUtils.radiansToDegrees);
 
         this.setPosition(body.getPosition().x-this.getWidth()/2,body.getPosition().y-this.getHeight()/2);
-        effect.setPosition(this.getWidth()/2+this.getX(),this.getHeight()/2+this.getY());
-        effect.update(delta);
+        if (effect != null) {
+            effect.setPosition(this.getWidth()/2+this.getX(),this.getHeight()/2+this.getY());
+            effect.update(delta);
+        }
+
+        if (autoRespawn) {
+            if (getY() < 0) {
+                Gdx.app.log("Rider","respawn");
+                setPosition(startX, startY);
+                if (effect != null) {
+                    effect.setPosition(startX, startY);
+                    effect.update(delta);
+                }
+                body.setTransform(startX, startY, 1);
+                setX(startX);
+                setY(startY);
+            }
+        }
     }
 
 }

@@ -25,7 +25,7 @@ object ChannelsRegistry {
                     customizable = true
             )),
             // default
-            Pair(::LineRiderChannel, ChannelInfo(
+            Pair(::BahnAnzeigeChannel, ChannelInfo(
                     "bahn-anzeige",
                     "Bahn Anzeige",
                     "Shows the Departures of a DB Train Station",
@@ -107,6 +107,16 @@ object ChannelsRegistry {
                     "huy-channel",
                     "Huys Channel",
                     "The greatest Channel!"
+            )),
+            Pair(::LineRiderChannel, ChannelInfo(
+                    "linerider",
+                    "LineRider Channel",
+                    "Let's ride some lines!"
+            )),
+            Pair(::EdgeDetectorChannel, ChannelInfo(
+                    "edge-detector",
+                    "Edge Detector Channel",
+                    "Detects and shows upper edges on camera"
             ))
     )
 
