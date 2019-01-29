@@ -1,8 +1,11 @@
-
+setCentralColor("#ABACAF");
 function setCentralColor(centralColor){
     const textElement = document.getElementById("color-picker__color-text");
-    const blockElement = document.getElementById("color-picker__show-block");
-    blockElement.style.backgroundColor =  centralColor;
+    const blockElement = document.getElementById("color-picker__info-box");
+    const lineElement = document.getElementById("color-picker__line-box");
+    blockElement.style.borderColor =  centralColor;
+    lineElement.style.borderColor =  centralColor;
 
-    document.getElementById("color-picker__color-text-hex").innerText =  blockElement.style.backgroundColor.toString();
+    document.getElementById("color-picker__color-text").innerText =  centralColor.toLowerCase();
+    document.getElementById("color-picker__color-text-hex").innerText =  blockElement.style.borderColor.toString();
 }

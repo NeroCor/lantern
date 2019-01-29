@@ -66,7 +66,8 @@ object ChannelsRegistry {
             Pair(::ColorPicker, ChannelInfo(
                     "ColorPicker",
                     "ColorPicker",
-                    "Pick centered Color"
+                    "Get the Color Code of an Object",
+                    Uri.parse("android.resource://com.example.androidthings.lantern/drawable/color")
             )),
             Pair(::NowPlayingChannel, ChannelInfo(
                     "now-playing",
