@@ -30,6 +30,20 @@ object ChannelsRegistry {
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/bahn"),
                     customizable = true
             )),
+            Pair(::ImgBottomChannel, ChannelInfo(
+                    "img-bottom",
+                    "Img Bottom Channel",
+                    "Shows the center generated img",
+                    Uri.parse("android.resource://com.example.androidthings.lantern/drawable/bahn"),
+                    customizable = true
+            )),
+            Pair(::ImgCenterChannel, ChannelInfo(
+                    "img-center",
+                    "Img Center Channel",
+                    "Animates the user to turn the latern and get surprised with an image of himself",
+                    Uri.parse("android.resource://com.example.androidthings.lantern/drawable/bahn"),
+                    customizable = true
+            )),
             Pair(::WeatherChannel, ChannelInfo(
                     "weather-biergarten-anzeige",
                     "Weather Screen",
