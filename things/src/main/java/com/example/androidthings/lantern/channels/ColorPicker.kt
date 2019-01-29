@@ -1,6 +1,5 @@
 package com.example.androidthings.lantern.channels
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -13,21 +12,21 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import com.example.androidthings.lantern.Channel
+import com.example.androidthings.lantern.hardware.Camera
+import kotlin.math.absoluteValue
+import android.content.Context
 import android.webkit.PermissionRequest
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.ImageView
-import com.example.androidthings.lantern.Channel
-import com.example.androidthings.lantern.hardware.Camera
 import kotlinx.android.synthetic.*
-import kotlin.math.absoluteValue
 
 
-/**
- * Makes a picture with the camera and projects it afterwards
- */
-class Pomodoro : Channel() {
+
+
+class ColorPicker : Channel() {
 
     private var webView: WebView? = null
 
@@ -35,9 +34,9 @@ class Pomodoro : Channel() {
 
     private val handler: Handler = Handler()
     private val historySize = 50
-    private val historyValidCount = 20
+    private val historyValidCount = 10
     private val pixelSpacing = 5
-    private val differenceHighValue = 8
+    private val differenceHighValue = 3
     private val differenceLowValue = 2
     private val topBrigthnessHistory = mutableListOf<Int>()
     private val bottomBrigthnessHistory = mutableListOf<Int>()
@@ -79,7 +78,7 @@ class Pomodoro : Channel() {
 
         if (webView == null) {
             webView = ATWebView(activity!!)
-            loadURL("file:///android_asset/pomodoro.html")
+            loadURL("file:///android_asset/colorPicker/colorPicker.html")
         }
         return webView
     }
@@ -100,89 +99,22 @@ class Pomodoro : Channel() {
         imageBuffer.get(imageBytes)
         image.close()
         val bitmap = getBitmapFromByteArray(imageBytes)
-        checkIfButtonIsDown(bitmap)
+        getCentralColor(bitmap)
         handler.post({ this.view.setImageBitmap(bitmap) })
         if (isOpen)
             handler.post({mCamera.takePicture()})
     }
+    private fun getCentralColor(bitmap: Bitmap) {
+        val cordX = bitmap.width/2
+        val cordY = bitmap.height/2
 
-    private fun checkIfButtonIsDown(bitmap: Bitmap): Int {
-        val height = bitmap.height
-        val width = bitmap.width
-        var r = 0
-        var g = 0
-        var b = 0
-        var n = 0
-        var topBrightnessHistoryAvr = 0
-        var bottomBrightnessHistoryAvr = 0
-        var brightnessTop = 0
-        var brightnessBottom = 0
-        val pixels = IntArray(width * height)
-        bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
-        var i = 0
-        while (i < pixels.size/2) {
-            val color = pixels[i]
-            r += Color.red(color)
-            g += Color.green(color)
-            b += Color.blue(color)
-            n++
-            i += pixelSpacing
-        }
-        brightnessTop = (r + b + g) / (n * 3)
-        i = pixels.size/2
-        r = 0
-        g = 0
-        b = 0
-        n = 0
-        while (i < pixels.size) {
-            val color = pixels[i]
-            r += Color.red(color)
-            g += Color.green(color)
-            b += Color.blue(color)
-            n++
-            i += pixelSpacing
-        }
-        brightnessBottom = (r + b + g) / (n * 3)
-
-        if(bottomBrigthnessHistory.size > historyValidCount && topBrigthnessHistory.size > historyValidCount){
-            topBrightnessHistoryAvr = topBrigthnessHistory.sum()/topBrigthnessHistory.size
-            bottomBrightnessHistoryAvr = bottomBrigthnessHistory.sum()/bottomBrigthnessHistory.size
-
-            val isTopSame = (topBrightnessHistoryAvr - brightnessTop).absoluteValue <= differenceLowValue
-            val isBottomDifferent = (bottomBrightnessHistoryAvr - brightnessBottom).absoluteValue >= differenceHighValue
-
-            Log.d(TAG, "Top: "+brightnessTop+"\t avr: "+topBrightnessHistoryAvr)
-            Log.d(TAG, "Bot: "+brightnessBottom+"\t avr: "+bottomBrightnessHistoryAvr)
-
-            if (isBottomDifferent) {
-                if(!isButtonDown) {
-                    isButtonDown=true
-                    handler.post({ loadURL("javascript:buttonDown()") })
-
-                }
-                Log.d(TAG, "Down - Button")
-            } else {
-                if(isButtonDown) {
-                    isButtonDown=false
-                    handler.post({ loadURL("javascript:buttonUp()") })
-                }
-                Log.d(TAG, "Up - Button")
-            }
-        }
-
-        topBrigthnessHistory.add(brightnessTop)
-        if (topBrigthnessHistory.size > historySize){
-            topBrigthnessHistory.remove(1)
-        }
-
-        bottomBrigthnessHistory.add(brightnessBottom)
-        if (bottomBrigthnessHistory.size > historySize){
-            bottomBrigthnessHistory.remove(1)
-        }
-
-        return (brightnessBottom-brightnessTop).absoluteValue
+        val centralPixel = bitmap.getPixel(cordX ,cordY).toString()
+        val centralColor = String.format("#%06X", 0xFFFFFF and centralPixel.toInt())
+        Log.d(TAG, "Bitmap "+bitmap.toString())
+        Log.d(TAG, "CentralColor " + centralColor)
+        Log.d(TAG, "Function " + centralColor)
+        handler.post({ loadURL("javascript:setCentralColor(\"" + centralColor+ "\")") })
     }
-
     private fun getBitmapFromByteArray(imageBytes: ByteArray): Bitmap {
         val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, Matrix(), true)

@@ -32,6 +32,27 @@ object ChannelsRegistry {
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/bahn"),
                     customizable = true
             )),
+            Pair(::ImgBottomChannel, ChannelInfo(
+                    "img-bottom",
+                    "Img Bottom Channel",
+                    "Shows the center generated img",
+                    Uri.parse("android.resource://com.example.androidthings.lantern/drawable/bahn"),
+                    customizable = true
+            )),
+            Pair(::ImgCenterChannel, ChannelInfo(
+                    "img-center",
+                    "Img Center Channel",
+                    "Animates the user to turn the latern and get surprised with an image of himself",
+                    Uri.parse("android.resource://com.example.androidthings.lantern/drawable/bahn"),
+                    customizable = true
+            )),
+            Pair(::WeatherChannel, ChannelInfo(
+                    "weather-biergarten-anzeige",
+                    "Weather Screen",
+                    "Shows the actual weather and at some point an biergarden around with a nice background.",
+                    Uri.parse("android.resource://com.example.androidthings.lantern/drawable/mood_biergarten_low"),
+                    customizable = true
+            )),
             Pair(::ScreenShot, ChannelInfo(
                     "ScreenShot",
                     "Take a picture",
@@ -43,6 +64,12 @@ object ChannelsRegistry {
                     "Runs a Pomodoro Timer",
                     "Work with Pomodoro",
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/pomodoro")
+            )),
+            Pair(::ColorPicker, ChannelInfo(
+                    "ColorPicker",
+                    "ColorPicker",
+                    "Get the Color Code of an Object",
+                    Uri.parse("android.resource://com.example.androidthings.lantern/drawable/color")
             )),
             Pair(::NowPlayingChannel, ChannelInfo(
                     "now-playing",

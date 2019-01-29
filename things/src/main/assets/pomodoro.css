@@ -1,9 +1,12 @@
 body {
-font-family: 'Roboto', sans-serif;
+font-family: 'Open Sans';
 background-color: black;
 }
 h1 {
-color: red;
+}
+
+p {
+  margin: 0;
 }
 
 .wrapper {
@@ -16,23 +19,37 @@ color: red;
  }
 
 .timer {
- background-color: red;
- width: 20vh;
- height: 20vh;
+  display:flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  color: white;
+  width: 80vw;
+  height: 30vh;
+  border-radius: 20px;
+ background: linear-gradient(-45deg, #EE7752, #E73C7E, #23A6D5, #23D5AB);
+ background-size: 400% 400%;
+ background-position: 0% 50%;
 }
 
  .timer-go {
-  background-color: yellow;
+  animation-fill-mode: backwards;
+  background-position: 100% 50%
  }
 
  .timer-pressing {
-  background-color: green;
-  -webkit-transition: background-color 3000ms linear;
-  -ms-transition: background-color 3000ms linear;
-  transition: background-color 3000ms linear;
-  width: 20vh;
-  height: 20vh;
+  -webkit-animation: Gradient 1.5s ease;
+  -moz-animation: Gradient 1.5s ease;
+  animation: Gradient 1.5s ease;
  }
+
+ .timer-go.timer-pressing{
+  animation-direction: reverse;
+ }
+
+.time-text {
+  font-size: 40px;
+}
 
 .button {
   font-size: 60px;
@@ -40,9 +57,45 @@ color: red;
   justify-content: space-evenly;
   align-items: center;
   color: white;
-  background-color: lightgrey;
   border: 5px dashed white;
   border-radius: 20px;
   width: 80vw;
   height: 30vh;
+}
+
+.button-inner-background{
+  display:flex;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: lightgrey;
+  border-radius: 10px;
+  width: 99%;
+  height: 90%;
+}
+
+@-webkit-keyframes Gradient {
+	0% {
+		background-position: 0% 50%
+	}
+	100% {
+		background-position: 100% 50%
+	}
+}
+
+@-moz-keyframes Gradient {
+	0% {
+		background-position: 0% 50%
+	}
+	100% {
+		background-position: 100% 50%
+	}
+}
+
+@keyframes Gradient {
+	0% {
+		background-position: 0% 50%
+	}
+	100% {
+		background-position: 100% 50%
+	}
 }
