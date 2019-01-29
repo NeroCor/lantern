@@ -97,7 +97,7 @@ public class GameScreen implements Screen {
         stage.act();
 
         // if debug
-        debugRenderer.render(world, stage.getCamera().combined);
+//        debugRenderer.render(world, stage.getCamera().combined);
         world.step(graphics.getDeltaTime(), 6, 2);
     }
 
@@ -127,7 +127,7 @@ public class GameScreen implements Screen {
         stage.dispose();
     }
 
-    private int maxPoints = 20;
+    private int maxPoints = 10;
 
     public void onExtracted(int width, int height, List<Pair<Integer, Integer>> coords) {
         Gdx.app.log("GameScreen","on extracted: points size " + coords.size());

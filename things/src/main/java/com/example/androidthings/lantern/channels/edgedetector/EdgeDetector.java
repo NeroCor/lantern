@@ -17,7 +17,7 @@ import java.util.List;
 
 public class EdgeDetector implements ImageReader.OnImageAvailableListener {
 
-    private static final int DELAY_MS = 5000;
+    private static final int DELAY_MS = 3000;
 
     private final Camera camera = Camera.getInstance();
 

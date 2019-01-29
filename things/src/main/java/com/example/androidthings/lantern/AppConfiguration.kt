@@ -47,7 +47,7 @@ class AppConfiguration(private val context: Context): Observable() {
                         "type": "red-light-channel"
                     },
                     "forward": {
-                        "type": "ColorPicker"
+                        "type": "linerider"
                     },
                     "down": {
                         "type": "bahn-anzeige"
