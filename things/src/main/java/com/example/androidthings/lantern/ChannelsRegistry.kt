@@ -49,6 +49,11 @@ object ChannelsRegistry {
                     "Work with Pomodoro",
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/pomodoro")
             )),
+            Pair(::ColorPicker, ChannelInfo(
+                    "ColorPicker",
+                    "ColorPicker",
+                    "Pick centered Color"
+            )),
             Pair(::NowPlayingChannel, ChannelInfo(
                     "now-playing",
                     "Now playing",
