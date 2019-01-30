@@ -1,3 +1,19 @@
+# diva-e HackWeek Lantern Project
+
+In this Project we enhanced the Android Things Lantern Project (see below).
+
+What we did you can see in this Presentation: [HackWeek lantern Pitch Presentation](https://docs.google.com/presentation/d/1kCSCop1f2SDYrXSU5T-mtFEMFVq4KVZgdJuFJsWpz1Q/edit?usp=sharing)
+
+
+## New Channels:
+- Psssst Phone Light
+- Train Info
+- Pomodoro Timer
+- Biergarten
+- Colorpicker
+- Turn me Down
+- WIP: Linerider
+
 # Android Things Lantern
 
 ![Lantern on a desk](https://user-images.githubusercontent.com/1244317/39310781-38b61c86-4963-11e8-8011-fd3ec4d3f234.jpg)
